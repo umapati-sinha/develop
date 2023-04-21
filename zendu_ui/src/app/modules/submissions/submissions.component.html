@@ -1,0 +1,99 @@
+<div class="vh-100 mx-5">
+  <div class="row mx-3" >
+    <p class="text start fs-3 fw-bold lh-lg"> Submissions</p>
+  </div>
+
+  <div class="d-flex flex-wrap justify-content-between row-gap-3 col-gap-3">
+    <div class="d-flex search-box" >
+
+      <p-button icon="pi pi-search" styleClass="p-button-text" (onClick) ="onSearch()"></p-button>
+        <input class="search-input" pInputText placeholder="Search..." [(ngModel)]="searchText"/>
+  </div>
+  <div>
+  <p-dropdown [options]="formList" optionLabel="label" optionValue="value" [(ngModel)]="selectedForm" placeholder="Select Form" [virtualScroll]="true"></p-dropdown>
+</div>
+<div>
+  <p-dropdown [options]="statusList" optionLabel="label" optionValue="value" [(ngModel)]="selectedStatus" placeholder="Select Status" [virtualScroll]="true" (onChange) = "onDropdownChange($event)"></p-dropdown>
+</div>
+<div>
+<p-calendar [(ngModel)]="selectedDate" appendTo="body" [showIcon]="true" [placeholder]="'Select Date'" [showClear]="true" (onSelect)="onDateSelect()" (onBlur)="onDateSelect($event)" dateFormat="dd/mm/yy"></p-calendar>
+</div>
+
+<div class="card flex justify-content-center">
+  <p-selectButton [options]="stateOptions" [(ngModel)]="selectedDashboard" optionLabel="label" optionValue="value" (click)="myEvent.emit()"></p-selectButton>
+</div>
+
+<div>
+  <p-button styleClass="p-button-outlined" (click)="exportCsv()">
+    <span class="pi pi-file-export"></span>
+    <span class="ml-2 font-bold">export</span>
+</p-button>
+</div>
+</div>
+
+<ng-container *ngIf="selectedDashboard === 'Map'; then mapDashboard; else listDashboard"></ng-container>
+
+<ng-template #listDashboard>
+<div class="card" style="margin-top: 20px;">
+  <p-table [value]="tableData"
+  [selectAll]="selectAll"  [lazy]="true" (onLazyLoad)="loadDatas()" [loading]="loading"
+  dataKey="code" [tableStyle]="{'min-width': '50rem'}" [scrollable]="true"
+  [rows] = "4" [rowHover] = "true" selectionMode = "single">
+  <ng-template pTemplate="header">
+      <tr>
+          <th style="width: 3rem">
+            <input class="form-check-input" type="checkbox" [(ngModel)]="selectAll" (change)="onSelectAllChange()">
+          </th>
+          <th *ngFor="let header of tableHeaders">{{header.label}}</th>
+      </tr>
+  </ng-template>
+  <ng-template pTemplate="body" let-data let-i="rowIndex">
+      <tr>
+          <td>
+
+              <input class="form-check-input" type="checkbox" [(ngModel)]="checkBox[i]" (change)="onSelectionChange(i)">
+          </td>
+         <td *ngFor="let header of tableHeaders"> <ng-container *ngIf="header.value === 'status'; then statusTag; else noTag"></ng-container>
+          <ng-template #statusTag>
+            <p-tag icon="pi pi-circle-fill" [value]="data[header.value]" [style]="getStatusStyle(data[header.value])"></p-tag>
+          </ng-template>
+          <ng-template #noTag>{{data[header.value]}}</ng-template>
+        </td>
+
+        </tr>
+  </ng-template>
+</p-table>
+</div>
+</ng-template>
+
+<ng-template #mapDashboard>
+  <div class="row d-flex justify-content-between" style="margin-top: 10px;">
+<div class="col-4 d-flex flex-column row-gap-2 card-header">
+  <span class="card my-10" *ngFor="let data of tableData">
+    <div class="d-flex justify-content-between card-header bg-transparent">
+    <h6 class="card-title">{{data.task}}</h6>
+    <div class="status"><p-tag icon="pi pi-circle-fill" [value]="data.status" [style]="getStatusStyle(data.status)"></p-tag></div>
+  </div>
+  <div class="card-body">
+    <ul class=" pl-0">
+    <p class="card-text">From: {{data.from}}</p>
+    <p class="card-text">To: {{data.to}}</p>
+    <p class="card-text">Due date: {{data.dueDate}}</p>
+  </ul>
+  </div>
+</span>
+</div>
+<div  class="col-8">
+  <div #mapContainer id="map"></div>
+</div>
+</div>
+</ng-template>
+<div class="container d-flex justify-content-between">
+  <div class="d-flex align-items-center">
+    {{pageReport}}
+  </div>
+  <p-paginator (onPageChange)="onPageChange($event)" [first]="first" [rows]="rows" [totalRecords]="totalRecords" [showFirstLastIcon]="false">
+
+  </p-paginator>
+</div>
+</div>

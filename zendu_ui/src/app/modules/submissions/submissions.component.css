@@ -1,0 +1,58 @@
+.search-box{
+  border-style: solid;
+  border-radius: 0.5rem;
+  border-width: thin;
+  border-color: rgb(196, 195, 195);
+}
+.search-box:focus-within{
+  outline: auto;
+  outline-width: 3px;
+  outline-style: solid;
+  outline-color: rgb(113, 156, 243);
+}
+.search-box:hover{
+  outline-width: 0.5px;
+  outline-style: solid;
+  outline-color: rgb(97, 145, 239);
+}
+
+.search-input{
+outline: none !important;
+border: none !important;
+}
+
+.p-button-icon{
+  color: rgb(196, 196, 196);
+  background-color: #6c757d;
+}
+
+/* input{
+  border-left: none !important;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-width: thin;
+} */
+/* input, p-dropdown, p-calendar{
+  outline: none !important;
+} */
+
+.p-calendar-w-btn .p-datepicker-trigger{
+  border-top-left-radius: 0;
+  border-bottom-left-radius: 0;
+  background-color: transparent;
+  border-color: #6c757d;
+  color: #6c757d;
+}
+
+#map {
+  height: 100%;
+  width: 100%;
+  position:relative;
+}
+.card-header{
+  border-bottom: none;
+}
+
+.card-title{
+  font-weight: bold;
+}
